@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+      - name: celery
+        image: gcr.io/devopsgcp-470806/hello-django:v1
+        command: ["celery", "-A", "hello_django", "worker", "-l", "info"]
+        envFrom:
+        - secretRef:
+            name: django-secrets

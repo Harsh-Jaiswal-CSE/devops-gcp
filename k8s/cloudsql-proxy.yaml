@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-django
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-django
+  template:
+    metadata:
+      labels:
+        app: hello-django
+    spec:
+      containers:
+      - name: django
+        image: gcr.io/YOUR_PROJECT_ID/hello-django:v1
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: django-secrets
+
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.33.6
+        command:
+        - "/cloud_sql_proxy"
+        - "-instances=devopsgcp-470806:us-central1:hello-postgres=tcp:5432"
+        securityContext:
+          runAsNonRoot: true
