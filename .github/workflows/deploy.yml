@@ -28,5 +28,5 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          gcloud container clusters get-credentials hello-cluster --zone asia-south1-a
+          gcloud container clusters get-credentials hello-cluster --zone us-central1-a
           kubectl set image deployment/hello-django django=gcr.io/${{ secrets.GCP_PROJECT }}/hello-django:${{ github.sha }}
